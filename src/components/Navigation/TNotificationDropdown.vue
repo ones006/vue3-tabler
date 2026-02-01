@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import { IconBell, IconStar } from '@tabler/icons-vue'
 
 interface NotificationItem {
@@ -25,6 +26,16 @@ const emit = defineEmits<{
   (e: 'item-click', item: NotificationItem): void
   (e: 'star-click', item: NotificationItem): void
 }>()
+
+const isExternalLink = (href: string) => {
+  try {
+    const url = new URL(href, window.location.origin)
+    return url.origin !== window.location.origin
+  } catch {
+    // If URL parsing fails, treat as relative/internal
+    return false
+  }
+}
 </script>
 
 <template>
@@ -47,9 +58,14 @@ const emit = defineEmits<{
                   :class="[`bg-${item.status}`, { 'status-dot-animated': item.animated }]"></span>
               </div>
               <div class="col text-truncate">
-                <a :href="item.link || '#'" class="text-body d-block" @click.prevent="emit('item-click', item)">
+                <component
+                  :is="item.link && !isExternalLink(item.link) ? RouterLink : 'a'"
+                  :to="item.link"
+                  :href="item.link || '#'"
+                  class="text-body d-block"
+                  @click.prevent="emit('item-click', item)">
                   {{ item.title }}
-                </a>
+                </component>
                 <div class="d-block text-secondary text-truncate mt-n1">
                   {{ item.description }}
                 </div>

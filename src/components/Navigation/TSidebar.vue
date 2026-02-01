@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 interface MenuItem {
   title: string
@@ -54,6 +55,16 @@ const sidebarTheme = computed(() => props.dark ? 'dark' : undefined)
 const toggleCollapsed = () => {
   emit('update:collapsed', !props.collapsed)
 }
+
+const isExternalLink = (href: string) => {
+  try {
+    const url = new URL(href, window.location.origin)
+    return url.origin !== window.location.origin
+  } catch {
+    // If URL parsing fails, treat as relative/internal
+    return false
+  }
+}
 </script>
 
 <template>
@@ -66,7 +77,10 @@ const toggleCollapsed = () => {
 
       <div class="sidebar-header d-flex align-items-center w-100">
         <h1 class="navbar-brand navbar-brand-autodark mb-0">
-          <a :href="brandHref">
+          <component
+            :is="brandHref && !isExternalLink(brandHref) ? RouterLink : 'a'"
+            :to="brandHref"
+            :href="brandHref">
             <template v-if="!collapsed">
               <img v-if="brandImage" :src="brandImage" :alt="brandText" class="navbar-brand-image" />
               <span v-else>{{ brandText }}</span>
@@ -75,7 +89,7 @@ const toggleCollapsed = () => {
               <img v-if="brandImage" :src="brandImage" :alt="brandText" class="navbar-brand-image" />
               <span v-else>{{ brandText.charAt(0) }}</span>
             </template>
-          </a>
+          </component>
         </h1>
 
         <!-- Toggle Button (Desktop only) -->
@@ -99,7 +113,11 @@ const toggleCollapsed = () => {
           <template v-for="(item, index) in items" :key="index">
             <!-- Simple Link -->
             <li v-if="!item.children" class="nav-item" :class="{ active: item.active }">
-              <a class="nav-link" :href="item.href || 'javascript:void(0)'">
+              <component
+                :is="item.href && !isExternalLink(item.href) ? RouterLink : 'a'"
+                :to="item.href"
+                :href="item.href || 'javascript:void(0)'"
+                class="nav-link">
                 <span v-if="item.icon" class="nav-link-icon d-md-none d-lg-inline-block">
                   <component :is="item.icon" class="icon" />
                 </span>
@@ -110,7 +128,7 @@ const toggleCollapsed = () => {
                   class="text-uppercase">
                   {{ item.badge.text }}
                 </span>
-              </a>
+              </component>
             </li>
 
             <!-- Dropdown -->
@@ -128,14 +146,17 @@ const toggleCollapsed = () => {
                 <div class="dropdown-menu-columns">
                   <div class="dropdown-menu-column">
                     <template v-for="(child, cIdx) in item.children" :key="cIdx">
-                      <a class="dropdown-item" :class="{ active: child.active }"
-                        :href="child.href || 'javascript:void(0)'">
+                      <component
+                        :is="child.href && !isExternalLink(child.href) ? RouterLink : 'a'"
+                        :to="child.href"
+                        :href="child.href || 'javascript:void(0)'"
+                        class="dropdown-item" :class="{ active: child.active }">
                         {{ child.title }}
                         <span v-if="child.badge" :class="`badge badge-sm bg-${child.badge.variant} ms-auto`"
                           class="text-uppercase">
                           {{ child.badge.text }}
                         </span>
-                      </a>
+                      </component>
                     </template>
                   </div>
                 </div>

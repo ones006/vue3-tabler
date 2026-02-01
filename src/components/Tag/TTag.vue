@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
+
 interface Props {
   text?: string
   variant?: string
@@ -18,13 +20,28 @@ const emit = defineEmits(['remove'])
 const onRemove = () => {
   emit('remove')
 }
+
+const isExternalLink = (href: string) => {
+  try {
+    const url = new URL(href, window.location.origin)
+    return url.origin !== window.location.origin
+  } catch {
+    // If URL parsing fails, treat as relative/internal
+    return false
+  }
+}
 </script>
 
 <template>
-  <component :is="link ? 'a' : 'span'" :href="link" class="tag" :class="[
-    `tag-${variant}`,
-    { 'tag-rounded': rounded }
-  ]">
+  <component 
+    :is="link && !isExternalLink(link) ? RouterLink : (link ? 'a' : 'span')"
+    :to="link"
+    :href="link"
+    class="tag" 
+    :class="[
+      `tag-${variant}`,
+      { 'tag-rounded': rounded }
+    ]">
     <slot>{{ text }}</slot>
     <a v-if="removable" href="javascript:void(0)" class="tag-addon" @click.stop="onRemove">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"

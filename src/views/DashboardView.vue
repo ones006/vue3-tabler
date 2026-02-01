@@ -15,7 +15,7 @@ import {
   TInput,
   TToggleTheme,
   TThemeSettings
-} from '../components/tabler-vue'
+} from '../components'
 import {
   IconHome,
   IconPackage,
@@ -173,7 +173,7 @@ const tableItems = [
                     <TAvatar size="sm">U{{ i }}</TAvatar>
                   </div>
                   <div class="col text-truncate">
-                    <a href="#" class="text-body d-block">User {{ i }}</a>
+                    <a href="#" class="text-body d-block" @click.prevent>User {{ i }}</a>
                     <div class="text-secondary text-truncate mt-n1">Purchased the premium plan.</div>
                   </div>
                 </div>

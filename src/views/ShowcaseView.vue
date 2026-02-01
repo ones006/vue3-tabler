@@ -39,7 +39,7 @@ import {
   TThemeSettings,
   TToast,
   TSidebar
-} from '../components/tabler-vue'
+} from '../components'
 import {
   IconCheck,
   IconAlertCircle,

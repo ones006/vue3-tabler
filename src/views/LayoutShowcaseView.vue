@@ -14,12 +14,11 @@ import {
   TAppMenuDropdown,
   TToggleTheme,
   TThemeSettings
-} from '../components/tabler-vue'
+} from '../components'
 import {
   IconHome,
   IconPackage,
   IconPlus,
-  IconHomeCog
 } from '@tabler/icons-vue'
 
 const layoutType = ref<any>('vertical')
@@ -53,7 +52,18 @@ const headerClasses = computed(() => {
   }
 })
 
-const mockNotifications = ref([
+interface NotificationItem {
+  id: string | number
+  title: string
+  description: string
+  time?: string
+  status?: 'red' | 'green' | 'blue' | 'yellow' | 'azure' | 'purple' | 'pink' | 'orange' | 'teal' | 'gray'
+  animated?: boolean
+  link?: string
+  starred?: boolean
+}
+
+const mockNotifications = ref<NotificationItem[]>([
   { id: 1, title: 'Example 1', description: 'Change deprecated html tags to text decoration classes (#29604)', status: 'red', animated: true },
   { id: 2, title: 'Example 2', description: 'justify-content:between ⇒ justify-content:space-between (#29734)', starred: true },
   { id: 3, title: 'Example 3', description: 'Update change-version.js (#29736)' },
@@ -68,6 +78,8 @@ const mockApps = [
   { id: 'figma', name: 'Figma', icon: 'https://img.logo.dev/figma.com?token=pk_mXfV-f_uR8u9B6vQ4g9Q9w' },
   { id: 'github', name: 'GitHub', icon: 'https://img.logo.dev/github.com?token=pk_mXfV-f_uR8u9B6vQ4g9Q9w' },
 ]
+
+
 </script>
 
 <template>
@@ -153,8 +165,8 @@ const mockApps = [
     </TPageBody>
 
     <template #footer-links>
-      <li class="list-inline-item"><a href="#" class="link-secondary">Documentation</a></li>
-      <li class="list-inline-item"><a href="#" class="link-secondary">License</a></li>
+      <li class="list-inline-item"><a href="#" class="link-secondary" @click.prevent>Documentation</a></li>
+      <li class="list-inline-item"><a href="#" class="link-secondary" @click.prevent>License</a></li>
     </template>
     <TThemeSettings />
   </TLayout>

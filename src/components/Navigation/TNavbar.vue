@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 interface MenuItem {
   title: string
@@ -45,6 +46,16 @@ const navbarClasses = computed(() => {
 })
 
 const containerClass = computed(() => props.fluid ? 'container-fluid' : 'container-xl')
+
+const isExternalLink = (href: string) => {
+  try {
+    const url = new URL(href, window.location.origin)
+    return url.origin !== window.location.origin
+  } catch {
+    // If URL parsing fails, treat as relative/internal
+    return false
+  }
+}
 </script>
 
 <template>
@@ -57,10 +68,13 @@ const containerClass = computed(() => props.fluid ? 'container-fluid' : 'contain
 
       <h1 v-if="brandText || brandImage"
         class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-        <a :href="brandHref">
+        <component
+          :is="brandHref && !isExternalLink(brandHref) ? RouterLink : 'a'"
+          :to="brandHref"
+          :href="brandHref">
           <img v-if="brandImage" :src="brandImage" :alt="brandText" class="navbar-brand-image" />
           <span v-else>{{ brandText }}</span>
-        </a>
+        </component>
       </h1>
 
       <div class="navbar-nav flex-row order-md-last">
@@ -73,7 +87,11 @@ const containerClass = computed(() => props.fluid ? 'container-fluid' : 'contain
             <template v-for="(item, index) in items" :key="index">
               <!-- Simple Link -->
               <li v-if="!item.children" class="nav-item" :class="{ active: item.active }">
-                <a class="nav-link" :href="item.href || 'javascript:void(0)'">
+                <component
+                  :is="item.href && !isExternalLink(item.href) ? RouterLink : 'a'"
+                  :to="item.href"
+                  :href="item.href || 'javascript:void(0)'"
+                  class="nav-link">
                   <span v-if="item.icon" class="nav-link-icon d-md-none d-lg-inline-block">
                     <component :is="item.icon" class="icon" />
                   </span>
@@ -84,7 +102,7 @@ const containerClass = computed(() => props.fluid ? 'container-fluid' : 'contain
                     class="text-uppercase">
                     {{ item.badge.text }}
                   </span>
-                </a>
+                </component>
               </li>
 
               <!-- Dropdown -->
@@ -118,14 +136,18 @@ const containerClass = computed(() => props.fluid ? 'container-fluid' : 'contain
                         </div>
 
                         <!-- Standard Item -->
-                        <a v-else class="dropdown-item" :class="{ active: child.active }"
-                          :href="child.href || 'javascript:void(0)'">
+                        <component
+                          v-else
+                          :is="child.href && !isExternalLink(child.href) ? RouterLink : 'a'"
+                          :to="child.href"
+                          :href="child.href || 'javascript:void(0)'"
+                          class="dropdown-item" :class="{ active: child.active }">
                           {{ child.title }}
                           <span v-if="child.badge" :class="`badge badge-sm bg-${child.badge.variant} ms-auto`"
                             class="text-uppercase">
                             {{ child.badge.text }}
                           </span>
-                        </a>
+                        </component>
                       </template>
                     </div>
                   </div>

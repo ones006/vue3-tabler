@@ -22,8 +22,6 @@ import {
   IconUsers,
   IconShoppingCart,
   IconCurrencyDollar,
-  IconArrowUpRight,
-  IconArrowDownRight,
   IconSearch,
   IconDotsVertical,
   IconHomeCog
@@ -94,66 +92,32 @@ const tableItems = [
     <TPageBody>
       <TRow class="row-cards">
         <TCol sm="6" lg="3">
-          <TStatsCard title="Sales" value="75%" variant="blue">
+          <TStatsCard title="Sales" value="75%" variant="blue" trend="8%" trend-type="up" description="since last week">
             <template #icon>
               <IconShoppingCart />
             </template>
-            <template #footer>
-              <div class="card-footer border-0 bg-transparent pt-0">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  8%
-                  <IconArrowUpRight class="icon ms-1" />
-                </span>
-                <span class="text-secondary ms-1">since last week</span>
-              </div>
-            </template>
           </TStatsCard>
         </TCol>
         <TCol sm="6" lg="3">
-          <TStatsCard title="Revenue" value="$4,300" variant="green">
+          <TStatsCard title="Revenue" value="$4,300" variant="green" trend="-2%" trend-type="down"
+            description="since last week">
             <template #icon>
               <IconCurrencyDollar />
             </template>
-            <template #footer>
-              <div class="card-footer border-0 bg-transparent pt-0">
-                <span class="text-red d-inline-flex align-items-center lh-1">
-                  -2%
-                  <IconArrowDownRight class="icon ms-1" />
-                </span>
-                <span class="text-secondary ms-1">since last week</span>
-              </div>
+          </TStatsCard>
+        </TCol>
+        <TCol sm="6" lg="3">
+          <TStatsCard title="New Clients" value="678" variant="orange" trend="12%" trend-type="up"
+            description="since last month">
+            <template #icon>
+              <IconUsers />
             </template>
           </TStatsCard>
         </TCol>
         <TCol sm="6" lg="3">
-          <TStatsCard title="New Clients" value="678" variant="orange">
+          <TStatsCard title="Active Users" value="2,450" variant="azure" trend="5%" trend-type="up" description="today">
             <template #icon>
               <IconUsers />
-            </template>
-            <template #footer>
-              <div class="card-footer border-0 bg-transparent pt-0">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  12%
-                  <IconArrowUpRight class="icon ms-1" />
-                </span>
-                <span class="text-secondary ms-1">since last month</span>
-              </div>
-            </template>
-          </TStatsCard>
-        </TCol>
-        <TCol sm="6" lg="3">
-          <TStatsCard title="Active Users" value="2,450" variant="azure">
-            <template #icon>
-              <IconUsers />
-            </template>
-            <template #footer>
-              <div class="card-footer border-0 bg-transparent pt-0">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  5%
-                  <IconArrowUpRight class="icon ms-1" />
-                </span>
-                <span class="text-secondary ms-1">today</span>
-              </div>
             </template>
           </TStatsCard>
         </TCol>

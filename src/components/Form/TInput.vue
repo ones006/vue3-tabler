@@ -54,7 +54,6 @@ const classes = computed(() => {
 const onInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   emit('update:modelValue', target.value)
-  emit('input', target.value)
 }
 </script>
 

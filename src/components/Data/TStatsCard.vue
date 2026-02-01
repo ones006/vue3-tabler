@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { IconArrowUp, IconArrowDown, IconMinus } from '@tabler/icons-vue'
+
 interface Props {
   title: string
   value: string | number
@@ -8,6 +10,7 @@ interface Props {
   variant?: string
   icon?: any
   loading?: boolean
+  description?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,31 +42,38 @@ const props = withDefaults(defineProps<Props>(), {
         <div class="col">
           <div class="h1 mb-0">{{ value }}</div>
         </div>
-        <div v-if="trend" class="col-auto">
+        <!-- Render trend in body if NO description is present (legacy/compact mode) -->
+        <div v-if="trend && !description" class="col-auto">
           <span :class="[
             'd-inline-flex align-items-center lh-1',
             trendType === 'up' ? 'text-green' : trendType === 'down' ? 'text-red' : 'text-secondary'
           ]">
             {{ trend }}
-            <svg v-if="trendType === 'up'" xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
-              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M3 17l6 -6l4 4l8 -8" />
-              <path d="M14 7l7 0l0 7" />
-            </svg>
-            <svg v-if="trendType === 'down'" xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
-              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M3 7l6 6l4 -4l8 8" />
-              <path d="M14 17l7 0l0 -7" />
-            </svg>
+            <IconArrowUp v-if="trendType === 'up'" class="icon ms-1" />
+            <IconArrowDown v-if="trendType === 'down'" class="icon ms-1" />
+            <IconMinus v-if="trendType === 'neutral'" class="icon ms-1" />
           </span>
         </div>
       </div>
     </div>
-    <slot name="footer" />
+    
+    <!-- Render Footer design if description is present -->
+    <div v-if="description || $slots.footer" class="card-footer border-0 bg-transparent pt-0">
+      <slot name="footer">
+        <div v-if="description">
+          <span :class="[
+            'd-inline-flex align-items-center lh-1',
+            trendType === 'up' ? 'text-green' : trendType === 'down' ? 'text-red' : 'text-secondary'
+          ]">
+            {{ trend }}
+            <IconArrowUp v-if="trendType === 'up'" class="icon ms-1" />
+            <IconArrowDown v-if="trendType === 'down'" class="icon ms-1" />
+            <IconMinus v-if="trendType === 'neutral'" class="icon ms-1" />
+          </span>
+          <span class="text-secondary ms-1">{{ description }}</span>
+        </div>
+      </slot>
+    </div>
   </div>
 </template>
 

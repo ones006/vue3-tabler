@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { IconMoon, IconSun } from '@tabler/icons-vue'
-import { useThemeStore } from '../../../stores/theme'
+import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
 

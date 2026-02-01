@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import VueApexCharts from 'vue3-apexcharts'
 import { computed } from 'vue'
-import { useThemeStore } from '../../../stores/theme'
+import { useThemeStore } from '@/stores/theme'
 
 interface Props {
   height?: string | number

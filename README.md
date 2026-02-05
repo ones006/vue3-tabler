@@ -1,30 +1,65 @@
-# Tabler Vue 3
+# Vue3 Tabler
 
-A premium administrative dashboard components for Vue 3, based on [Tabler UI](https://tabler.io/). This project provides a set of highly customizable Vue components that follow Tabler's design system and best practices.
+[![npm version](https://badge.fury.io/js/vue3-tabler.svg)](https://www.npmjs.com/package/vue3-tabler)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A premium administrative dashboard component library for Vue 3, based on [Tabler UI](https://tabler.io/). This project provides a set of highly customizable Vue components that follow Tabler's design system and best practices.
 
 ## 🚀 Getting Started
 
 ### Installation
 
-Make sure you have specialized dependencies installed:
+Install the package via npm:
 
 ```bash
-npm install @tabler/core @tabler/icons-vue
+npm install vue3-tabler
+```
+
+Make sure you also have the peer dependencies installed:
+
+```bash
+npm install @tabler/core @tabler/icons-vue vue-router pinia
 ```
 
 ### Basic Usage
 
-Import the components you need from the library:
+#### Option 1: Import Components Individually
 
 ```vue
 <script setup>
-import { TLayout, TCard, TButton } from './components/tabler-vue'
+import { TLayout, TCard, TButton } from 'vue3-tabler'
 </script>
 
 <template>
   <TLayout type="vertical">
     <TCard title="Welcome">
       <p>This is a Tabler Vue component!</p>
+      <TButton variant="primary">Click Me</TButton>
+    </TCard>
+  </TLayout>
+</template>
+```
+
+#### Option 2: Register Components Globally
+
+```javascript
+// main.js or main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import Vue3Tabler from 'vue3-tabler'
+
+const app = createApp(App)
+app.use(Vue3Tabler)
+app.mount('#app')
+```
+
+Then use components without importing:
+
+```vue
+<template>
+  <TLayout type="vertical">
+    <TCard title="Welcome">
+      <p>No import needed!</p>
       <TButton variant="primary">Click Me</TButton>
     </TCard>
   </TLayout>

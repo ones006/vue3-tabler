@@ -1,0 +1,25 @@
+# Source files (already built)
+src/
+
+# Development files
+.vscode/
+.git/
+.gitignore
+node_modules/
+
+# Build configuration
+vite.config.ts
+tsconfig*.json
+
+# Development app files
+index.html
+public/
+
+# Documentation/examples
+examples/
+
+# Other
+*.log
+.DS_Store
+.env
+.env.*

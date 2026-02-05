@@ -1,13 +1,49 @@
 {
   "name": "vue3-tabler",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Vue 3 component library based on Tabler UI",
   "type": "module",
+  "main": "./dist/vue3-tabler.umd.js",
+  "module": "./dist/vue3-tabler.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue3-tabler.es.js",
+      "require": "./dist/vue3-tabler.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build:lib": "vue-tsc && vite build --mode library",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build:lib"
   },
+  "keywords": [
+    "vue",
+    "vue3",
+    "tabler",
+    "ui",
+    "component-library",
+    "admin-dashboard",
+    "typescript"
+  ],
+  "author": "ones006 <ones006@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ones006/vue3-tabler"
+  },
+  "bugs": {
+    "url": "https://github.com/ones006/vue3-tabler/issues"
+  },
+  "homepage": "https://github.com/ones006/vue3-tabler#readme",
   "dependencies": {
     "@tabler/core": "^1.4.0",
     "@tabler/icons-vue": "^3.36.1",
@@ -24,6 +60,7 @@
     "@vue/tsconfig": "^0.8.1",
     "typescript": "~5.9.3",
     "vite": "^7.2.4",
+    "vite-plugin-dts": "^4.5.4",
     "vue-tsc": "^3.1.4"
   }
 }

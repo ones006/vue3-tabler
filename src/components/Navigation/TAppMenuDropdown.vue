@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { type Component } from 'vue'
 import { IconLayoutGrid, IconSettings } from '@tabler/icons-vue'
+import { useLinkComponent } from '@/composables/useLinkComponent'
 
 interface AppItem {
   id: string | number
@@ -11,23 +12,15 @@ interface AppItem {
 
 interface Props {
   apps?: AppItem[]
+  linkComponent?: Component
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { getLinkComponent, isExternalLink } = useLinkComponent(props.linkComponent)
 
 const emit = defineEmits<{
   (e: 'settings-click'): void
 }>()
-
-const isExternalLink = (href: string) => {
-  try {
-    const url = new URL(href, window.location.origin)
-    return url.origin !== window.location.origin
-  } catch {
-    // If URL parsing fails, treat as relative/internal
-    return false
-  }
-}
 </script>
 
 <template>
@@ -50,9 +43,9 @@ const isExternalLink = (href: string) => {
           <div class="row g-0">
             <div v-for="app in apps" :key="app.id" class="col-4">
               <component
-                :is="app.link && !isExternalLink(app.link) ? RouterLink : 'a'"
-                :to="app.link"
-                :href="app.link || '#'"
+                :is="getLinkComponent(app.link)"
+                :to="app.link && !isExternalLink(app.link) ? app.link : undefined"
+                :href="app.link && isExternalLink(app.link) ? app.link : '#'"
                 class="d-flex flex-column flex-center text-center text-secondary py-2 px-2 link-hoverable text-decoration-none">
                 <img v-if="app.icon" :src="app.icon" class="w-6 h-6 mx-auto mb-2" width="24" height="24"
                   :alt="app.name" />

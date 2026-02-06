@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { inject, type Component } from 'vue'
 
 interface Step {
   title: string
@@ -12,6 +12,7 @@ interface Props {
   items: Step[]
   variant?: string
   counter?: boolean
+  linkComponent?: Component
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,6 +20,16 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'blue',
   counter: false
 })
+
+// Inject global link component if available
+const injectedLinkComponent = inject<Component | undefined>('linkComponent', undefined)
+
+// Get the appropriate link component
+const getLinkComponent = (href?: string) => {
+  if (!href) return 'span'
+  if (isExternalLink(href)) return 'a'
+  return props.linkComponent || injectedLinkComponent || 'a'
+}
 
 const isExternalLink = (href: string) => {
   try {
@@ -38,10 +49,10 @@ const isExternalLink = (href: string) => {
   ]">
     <template v-for="(step, index) in items" :key="index">
       <component
-        :is="step.href && !isExternalLink(step.href) ? RouterLink : 'a'"
+        :is="getLinkComponent(step.href)"
         v-if="step.href"
-        :to="step.href"
-        :href="step.href"
+        :to="step.href && !isExternalLink(step.href) ? step.href : undefined"
+        :href="step.href && isExternalLink(step.href) ? step.href : undefined"
         class="step-item"
         :class="{ active: step.active }"
         data-bs-toggle="tooltip"

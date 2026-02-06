@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { computed, type Component } from 'vue'
+import { useLinkComponent } from '@/composables/useLinkComponent'
 
 interface MenuItem {
   title: string
@@ -23,6 +23,7 @@ interface Props {
   brandText?: string
   placement?: 'start' | 'end'
   transparent?: boolean
+  linkComponent?: Component
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -38,6 +39,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'update:collapsed', value: boolean): void
 }>()
+
+const { getLinkComponent, isExternalLink } = useLinkComponent(props.linkComponent)
 
 const sidebarClasses = computed(() => {
   return {
@@ -55,16 +58,6 @@ const sidebarTheme = computed(() => props.dark ? 'dark' : undefined)
 const toggleCollapsed = () => {
   emit('update:collapsed', !props.collapsed)
 }
-
-const isExternalLink = (href: string) => {
-  try {
-    const url = new URL(href, window.location.origin)
-    return url.origin !== window.location.origin
-  } catch {
-    // If URL parsing fails, treat as relative/internal
-    return false
-  }
-}
 </script>
 
 <template>
@@ -78,9 +71,9 @@ const isExternalLink = (href: string) => {
       <div class="sidebar-header d-flex align-items-center w-100">
         <h1 class="navbar-brand navbar-brand-autodark mb-0">
           <component
-            :is="brandHref && !isExternalLink(brandHref) ? RouterLink : 'a'"
-            :to="brandHref"
-            :href="brandHref">
+            :is="getLinkComponent(brandHref)"
+            :to="brandHref && !isExternalLink(brandHref) ? brandHref : undefined"
+            :href="brandHref && isExternalLink(brandHref) ? brandHref : undefined">
             <template v-if="!collapsed">
               <img v-if="brandImage" :src="brandImage" :alt="brandText" class="navbar-brand-image" />
               <span v-else>{{ brandText }}</span>
@@ -114,9 +107,9 @@ const isExternalLink = (href: string) => {
             <!-- Simple Link -->
             <li v-if="!item.children" class="nav-item" :class="{ active: item.active }">
               <component
-                :is="item.href && !isExternalLink(item.href) ? RouterLink : 'a'"
-                :to="item.href"
-                :href="item.href || 'javascript:void(0)'"
+                :is="getLinkComponent(item.href)"
+                :to="item.href && !isExternalLink(item.href) ? item.href : undefined"
+                :href="item.href && isExternalLink(item.href) ? item.href : 'javascript:void(0)'"
                 class="nav-link">
                 <span v-if="item.icon" class="nav-link-icon d-md-none d-lg-inline-block">
                   <component :is="item.icon" class="icon" />
@@ -147,9 +140,9 @@ const isExternalLink = (href: string) => {
                   <div class="dropdown-menu-column">
                     <template v-for="(child, cIdx) in item.children" :key="cIdx">
                       <component
-                        :is="child.href && !isExternalLink(child.href) ? RouterLink : 'a'"
-                        :to="child.href"
-                        :href="child.href || 'javascript:void(0)'"
+                        :is="getLinkComponent(child.href)"
+                        :to="child.href && !isExternalLink(child.href) ? child.href : undefined"
+                        :href="child.href && isExternalLink(child.href) ? child.href : 'javascript:void(0)'"
                         class="dropdown-item" :class="{ active: child.active }">
                         {{ child.title }}
                         <span v-if="child.badge" :class="`badge badge-sm bg-${child.badge.variant} ms-auto`"

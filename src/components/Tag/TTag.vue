@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { inject, type Component } from 'vue'
 
 interface Props {
   text?: string
@@ -7,6 +7,7 @@ interface Props {
   rounded?: boolean
   link?: string
   removable?: boolean
+  linkComponent?: Component
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -16,6 +17,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits(['remove'])
+
+// Inject global link component if available
+const injectedLinkComponent = inject<Component | undefined>('linkComponent', undefined)
+
+// Use prop linkComponent, or fallback to injected, or use plain 'a' tag
+const getLinkComponent = () => {
+  if (!props.link) return 'span'
+  if (isExternalLink(props.link)) return 'a'
+  return props.linkComponent || injectedLinkComponent || 'a'
+}
 
 const onRemove = () => {
   emit('remove')
@@ -34,9 +45,9 @@ const isExternalLink = (href: string) => {
 
 <template>
   <component 
-    :is="link && !isExternalLink(link) ? RouterLink : (link ? 'a' : 'span')"
-    :to="link"
-    :href="link"
+    :is="getLinkComponent()"
+    :to="link && !isExternalLink(link) ? link : undefined"
+    :href="link && isExternalLink(link) ? link : undefined"
     class="tag" 
     :class="[
       `tag-${variant}`,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { type Component } from 'vue'
 import { IconBell, IconStar } from '@tabler/icons-vue'
+import { useLinkComponent } from '@/composables/useLinkComponent'
 
 interface NotificationItem {
   id: string | number
@@ -16,9 +17,11 @@ interface NotificationItem {
 interface Props {
   notifications?: NotificationItem[]
   unreadCount?: number
+  linkComponent?: Component
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { getLinkComponent, isExternalLink } = useLinkComponent(props.linkComponent)
 
 const emit = defineEmits<{
   (e: 'archive'): void
@@ -26,16 +29,6 @@ const emit = defineEmits<{
   (e: 'item-click', item: NotificationItem): void
   (e: 'star-click', item: NotificationItem): void
 }>()
-
-const isExternalLink = (href: string) => {
-  try {
-    const url = new URL(href, window.location.origin)
-    return url.origin !== window.location.origin
-  } catch {
-    // If URL parsing fails, treat as relative/internal
-    return false
-  }
-}
 </script>
 
 <template>
@@ -59,9 +52,9 @@ const isExternalLink = (href: string) => {
               </div>
               <div class="col text-truncate">
                 <component
-                  :is="item.link && !isExternalLink(item.link) ? RouterLink : 'a'"
-                  :to="item.link"
-                  :href="item.link || '#'"
+                  :is="getLinkComponent(item.link)"
+                  :to="item.link && !isExternalLink(item.link) ? item.link : undefined"
+                  :href="item.link && isExternalLink(item.link) ? item.link : '#'"
                   class="text-body d-block"
                   @click.prevent="emit('item-click', item)">
                   {{ item.title }}

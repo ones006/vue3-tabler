@@ -66,6 +66,56 @@ Then use components without importing:
 </template>
 ```
 
+### 🔗 Inertia.js & Routing Integration
+
+This library is designed to be framework-agnostic regarding routing. It works seamlessly with **vue-router**, **Inertia.js**, or plain HTML links.
+
+#### Using with Inertia.js
+
+To use Inertia's `<Link>` component for all navigation links (sidebar, tags, dropdowns, etc.), pass it to the plugin options during installation:
+
+```javascript
+import { createApp } from 'vue'
+import { Link } from '@inertiajs/vue3' // or @inertiajs/inertia-vue3
+import Vue3Tabler from 'vue3-tabler'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// Configure global link component
+app.use(Vue3Tabler, { 
+  linkComponent: Link 
+})
+
+app.mount('#app')
+```
+
+#### Using with vue-router
+
+If you are using `vue-router`, you can either rely on the default behavior (which tries to resolve `RouterLink`) or explicitly pass it for clarity:
+
+```javascript
+import { RouterLink } from 'vue-router'
+
+app.use(Vue3Tabler, { 
+  linkComponent: RouterLink 
+})
+```
+
+#### Individual Component Override
+
+You can also override the link component on a per-component basis using the `link-component` prop:
+
+```vue
+<script setup>
+import { Link } from '@inertiajs/vue3'
+</script>
+
+<template>
+  <TTag :link-component="Link" link="/dashboard">Dashboard</TTag>
+</template>
+```
+
 ---
 
 ## 🏗️ Components Documentation

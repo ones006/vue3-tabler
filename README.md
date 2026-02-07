@@ -12,7 +12,7 @@ A premium administrative dashboard component library for Vue 3, based on [Tabler
 Install the package via npm:
 
 ```bash
-npm install vue3-tabler
+npm install @ones006/vue3-tabler
 ```
 
 Make sure you also have the peer dependencies installed:

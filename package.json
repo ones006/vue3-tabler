@@ -1,5 +1,5 @@
 {
-  "name": "vue3-tabler",
+  "name": "@ones006/vue3-tabler",
   "version": "1.0.0",
   "description": "Vue 3 component library based on Tabler UI",
   "type": "module",

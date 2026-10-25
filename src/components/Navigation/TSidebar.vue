@@ -7,6 +7,7 @@ interface MenuItem {
   href?: string
   icon?: any
   active?: boolean
+  section?: boolean
   badge?: {
     text: string
     variant: string
@@ -17,6 +18,7 @@ interface MenuItem {
 interface Props {
   items?: MenuItem[]
   collapsed?: boolean
+  foldedHover?: boolean
   dark?: boolean
   brandHref?: string
   brandImage?: string
@@ -29,6 +31,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   collapsed: false,
+  foldedHover: false,
   dark: false,
   brandHref: '/',
   brandText: 'Tabler',
@@ -48,6 +51,8 @@ const sidebarClasses = computed(() => {
     'navbar-vertical': true,
     'navbar-expand-lg': true,
     'navbar-vertical-narrow': props.collapsed,
+    'navbar-folded': props.collapsed,
+    'navbar-folded-hover': props.collapsed && props.foldedHover,
     'navbar-right': props.placement === 'end',
     'navbar-transparent': props.transparent
   }
@@ -104,8 +109,13 @@ const toggleCollapsed = () => {
       <div class="collapse navbar-collapse" id="sidebar-menu">
         <ul class="navbar-nav pt-lg-3">
           <template v-for="(item, index) in items" :key="index">
+            <!-- Section Title -->
+            <li v-if="item.section" class="nav-section-title">
+              {{ item.title }}
+            </li>
+
             <!-- Simple Link -->
-            <li v-if="!item.children" class="nav-item" :class="{ active: item.active }">
+            <li v-else-if="!item.children" class="nav-item" :class="{ active: item.active }">
               <component
                 :is="getLinkComponent(item.href)"
                 :to="item.href && !isExternalLink(item.href) ? item.href : undefined"
@@ -158,6 +168,10 @@ const toggleCollapsed = () => {
           </template>
           <slot />
         </ul>
+
+        <div v-if="$slots.footer" class="navbar-footer mt-auto">
+          <slot name="footer" />
+        </div>
       </div>
 
     </div>

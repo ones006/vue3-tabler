@@ -1,6 +1,6 @@
 {
   "name": "@ones006/vue3-tabler",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Vue 3 component library based on Tabler UI",
   "type": "module",
   "main": "./dist/vue3-tabler.umd.js",
@@ -11,8 +11,15 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/vue3-tabler.es.js",
       "require": "./dist/vue3-tabler.umd.js"
-    }
+    },
+    "./dist/*": "./dist/*",
+    "./style.css": "./dist/vue3-tabler.css",
+    "./package.json": "./package.json"
   },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "files": [
     "dist",
     "README.md",
@@ -45,14 +52,27 @@
   },
   "homepage": "https://github.com/ones006/vue3-tabler#readme",
   "dependencies": {
-    "@tabler/core": "^1.4.0",
-    "@tabler/icons-vue": "^3.36.1",
+    "@tabler/core": "^1.7.1",
+    "@tabler/icons-vue": "^3.49.0",
     "apexcharts": "^5.3.6",
     "pinia": "^3.0.4",
     "vue": "^3.5.24",
     "vue-router": "^4.6.4",
     "vue3-apexcharts": "^1.10.0",
     "vue3-easy-data-table": "^1.5.47"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "@tabler/core": ">=1.5.0",
+    "@tabler/icons-vue": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vue-router": {
+      "optional": true
+    },
+    "pinia": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

@@ -8,7 +8,7 @@ interface Props {
   square?: boolean
   pill?: boolean
   icon?: boolean
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
   loading?: boolean
@@ -30,9 +30,10 @@ const props = withDefaults(defineProps<Props>(), {
 const classes = computed(() => {
   return {
     'btn': true,
-    [`btn-${props.variant}`]: !props.outline && !props.ghost,
-    [`btn-outline-${props.variant}`]: props.outline,
-    [`btn-ghost-${props.variant}`]: props.ghost,
+    [`btn-${props.variant}`]: !props.outline && !props.ghost && props.variant && props.variant !== 'ghost',
+    [`btn-outline-${props.variant}`]: props.outline && props.variant,
+    [`btn-ghost-${props.variant}`]: props.ghost && props.variant && props.variant !== 'ghost' && props.variant !== 'default',
+    'btn-ghost': props.ghost || props.variant === 'ghost',
     [`btn-${props.size}`]: props.size !== 'md',
     'btn-square': props.square,
     'btn-pill': props.pill,

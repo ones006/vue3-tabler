@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import {
-  TAlert,
   TButton,
-  TBadge,
   TCard,
   TCarousel,
   TCol,
@@ -24,25 +22,42 @@ import {
   TChart,
   TModal,
   TOffcanvas,
-  TPagination,
-  TPlaceholder,
-  TProgress,
   TRow,
-  TSteps,
   TTabs,
   TTab,
-  TTag,
   TLayout,
   TPageHeader,
   TPageBody,
-  TToggleTheme,
   TThemeSettings,
   TToast,
-  TSidebar
+  TNumberInput,
+  TStatus,
+  TStatusDot,
+  TBreadcrumb,
+  TSegmentedControl,
+  TDivider,
+  TMockupBrowser,
+  TSignal,
+  TLegend,
+  TLegendList,
+  TSparkline,
+  TShape,
+  TFlag,
+  TTextShimmer,
+  TKbd,
+  TKbdGroup,
+  TOtpInput,
+  TPasswordStrength,
+  TClipboard,
+  TCountUp,
+  TConfetti,
+  TTracking,
+  TTrending,
+  TMention,
+  TChat,
+  TChatBubble
 } from '../components'
 import {
-  IconCheck,
-  IconAlertCircle,
   IconHome,
   IconPackage,
   IconBell,
@@ -54,8 +69,6 @@ const showModal = ref(false)
 const showOffcanvas = ref(false)
 const showToast = ref(false)
 const selectedTab = ref('home')
-const progressValue = ref(38)
-const currentPage = ref(1)
 const inputValue = ref('')
 
 // Basic Form states
@@ -71,6 +84,10 @@ const selectValue = ref(1)
 const multiSelectValue = ref([1, 2])
 const ratingValue = ref(4)
 const wysiwygContent = ref('Hello <b>Tabler</b>!')
+const numberValue = ref(3)
+const segmentedValue = ref('Daily')
+const otpValue = ref('')
+const passwordInput = ref('Secr3t123!')
 
 const tableItems = [
   { id: 1, name: 'Paweł Kuna', email: 'pawel@example.com', role: 'User' },
@@ -110,13 +127,6 @@ const carouselItems = [
   { image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=400&fit=crop', title: 'Nature', description: 'Beautiful mountain landscape.' },
   { image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&h=400&fit=crop', title: 'River', description: 'Peaceful river flowing through the woods.' },
   { image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop', title: 'Forest', description: 'Sunlight filtering through the trees.' },
-]
-
-const stepsItems = [
-  { title: 'Personal Info', active: true },
-  { title: 'Billing Address' },
-  { title: 'Payment Method' },
-  { title: 'Confirmation' }
 ]
 </script>
 
@@ -291,6 +301,206 @@ const stepsItems = [
                 </TFormFieldset>
               </div>
             </TOffcanvas>
+          </TCard>
+        </TCol>
+
+        <!-- New Tabler Components Section -->
+        <TCol :col="12">
+          <TCard title="Tabler v1.7+ New Components">
+            <TBreadcrumb :items="[
+              { text: 'Home', href: '#' },
+              { text: 'Components', href: '#' },
+              { text: 'New in Tabler', active: true }
+            ]" separator="arrows" class="mb-3" />
+
+            <div class="row g-3">
+              <!-- Number Input -->
+              <div class="col-md-4">
+                <label class="form-label">Number Input (Stepper)</label>
+                <TNumberInput v-model="numberValue" :min="1" :max="10" :step="1" />
+                <div class="form-text mt-1">Current value: {{ numberValue }}</div>
+              </div>
+
+              <!-- Segmented Control -->
+              <div class="col-md-4">
+                <label class="form-label">Segmented Control</label>
+                <TSegmentedControl
+                  v-model="segmentedValue"
+                  :items="['Daily', 'Weekly', 'Monthly']"
+                  full-width
+                />
+              </div>
+
+              <!-- Signal & Shimmer -->
+              <div class="col-md-4">
+                <label class="form-label">Signal & Text Shimmer</label>
+                <div class="d-flex align-items-center gap-3">
+                  <TSignal :level="2" color="green" label="Online" />
+                  <TSignal :level="3" :bars="4" color="orange" label="Warning" />
+                  <TTextShimmer text="Generating reply…" loader color="primary" />
+                </div>
+              </div>
+            </div>
+
+            <TDivider text="Status, Legend & Sparklines" color="primary" class="my-4" />
+
+            <div class="row g-3 align-items-center">
+              <!-- Status & Status Dot -->
+              <div class="col-md-4">
+                <label class="form-label d-block">Status Badges & Dots</label>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                  <TStatus color="green" dot animated label="Active" />
+                  <TStatus color="orange" dot label="Pending" />
+                  <TStatus color="red" lite label="Failed" />
+                  <TStatusDot color="primary" animated />
+                  <TStatusDot color="green" />
+                </div>
+              </div>
+
+              <!-- Legends -->
+              <div class="col-md-4">
+                <label class="form-label d-block">Interactive Legends</label>
+                <TLegendList>
+                  <TLegend color="blue" label="Allowed" value="339.0k" interactive />
+                  <TLegend color="red" label="Denied" value="1.2k" interactive />
+                </TLegendList>
+              </div>
+
+              <!-- Sparklines & Flags & Shapes -->
+              <div class="col-md-4">
+                <label class="form-label d-block">Flags, Shapes & Sparklines</label>
+                <div class="d-flex align-items-center gap-2">
+                  <TFlag country="id" size="md" />
+                  <TFlag country="us" size="md" />
+                  <TShape color="primary" size="sm" circle>
+                    <IconHome class="icon" />
+                  </TShape>
+                  <TSparkline :values="[3, 5, 2, 8, 6, 9, 7]" type="line" color="green" fill />
+                </div>
+              </div>
+            </div>
+
+            <TDivider text="Mockup Browser" class="my-4" />
+
+            <TMockupBrowser url="https://tabler.io" secure>
+              <div class="p-4 bg-body-tertiary text-center">
+                <h4 class="mb-1">Mockup Browser Component</h4>
+                <p class="text-secondary mb-0">Renders window controls and preview address frame.</p>
+              </div>
+            </TMockupBrowser>
+
+            <TDivider text="OTP Input & Password Strength" class="my-4" />
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">OTP Verification Code (6 digits, grouped)</label>
+                <div>
+                  <TOtpInput v-model="otpValue" :length="6" :groups="[3, 3]" auto-focus />
+                </div>
+                <div class="text-secondary mt-1 fs-5">Entered: {{ otpValue || '—' }}</div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Password Strength Meter</label>
+                <input
+                  v-model="passwordInput"
+                  type="password"
+                  class="form-control"
+                  placeholder="Enter a password…"
+                />
+                <TPasswordStrength :password="passwordInput" />
+              </div>
+            </div>
+
+            <TDivider text="Action & Feedback (Clipboard, CountUp, Confetti, Trending)" class="my-4" />
+
+            <div class="row g-3 align-items-center">
+              <div class="col-md-3">
+                <label class="form-label d-block">Animated CountUp</label>
+                <h2 class="mb-0 text-primary">
+                  <TCountUp :to="28540" :duration="2.5" prefix="$" />
+                </h2>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label d-block">Trend Indicator</label>
+                <div class="d-flex align-items-center gap-3">
+                  <TTrending :value="24.8" unit="%" direction="up" />
+                  <TTrending :value="-3.2" unit="%" direction="down" />
+                  <TTrending :value="0" unit="%" direction="neutral" />
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label d-block">Clipboard Copy</label>
+                <TClipboard text="npm install @tabler/core" label="Copy Command" feedback="Copied!" variant="outline-primary" size="sm" />
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label d-block">Confetti Shower</label>
+                <TConfetti label="Celebrate!" variant="success" />
+              </div>
+            </div>
+
+            <TDivider text="Uptime Tracking & Inline Mentions" class="my-4" />
+
+            <div class="row g-3">
+              <div class="col-md-7">
+                <label class="form-label">System Uptime Activity (30 Days)</label>
+                <TTracking
+                  :items="[
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'warning', tooltip: 'Degraded Performance' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'danger', tooltip: 'Major Outage' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: '', tooltip: 'No data' },
+                    { status: 'success', tooltip: '100% Operational' },
+                    { status: 'success', tooltip: '100% Operational' },
+                  ]"
+                />
+              </div>
+
+              <div class="col-md-5">
+                <label class="form-label">Inline Mentions & Shortcuts</label>
+                <p class="mb-0">
+                  Assigned to <TMention avatar="https://preview.tabler.io/static/avatars/000m.jpg">Paweł</TMention> via
+                  <TMention app="https://tabler.io/favicons/favicon.ico">Tabler</TMention>. Press
+                  <TKbdGroup>
+                    <TKbd>⌘</TKbd>
+                    <TKbd>K</TKbd>
+                  </TKbdGroup> to search.
+                </p>
+              </div>
+            </div>
+
+            <TDivider text="Chat Conversation" class="my-4" />
+
+            <TChat>
+              <TChatBubble
+                author="Alice Marlin"
+                date="10:24"
+                avatar="https://preview.tabler.io/static/avatars/002f.jpg"
+              >
+                <p class="mb-0">Hey, are you free for a quick review of the new Tabler components?</p>
+              </TChatBubble>
+              <TChatBubble
+                author="You"
+                date="10:25"
+                avatar="https://preview.tabler.io/static/avatars/000m.jpg"
+                me
+              >
+                <p class="mb-0">Yes, everything from the Tabler v1.5–1.7.1 changelog is now supported in vue3-tabler!</p>
+              </TChatBubble>
+            </TChat>
           </TCard>
         </TCol>
       </div>

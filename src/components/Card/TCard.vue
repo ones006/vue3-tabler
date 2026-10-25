@@ -18,6 +18,8 @@ interface Props {
   link?: boolean
   linkPop?: boolean
   linkRotate?: boolean
+  gradient?: boolean | string
+  pattern?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,6 +39,8 @@ const props = withDefaults(defineProps<Props>(), {
   link: false,
   linkPop: false,
   linkRotate: false,
+  gradient: false,
+  pattern: ''
 })
 
 const classes = computed(() => {
@@ -51,6 +55,9 @@ const classes = computed(() => {
     'card-link': props.link || props.linkPop || props.linkRotate,
     'card-link-pop': props.linkPop,
     'card-link-rotate': props.linkRotate,
+    'card-gradient': !!props.gradient,
+    [`card-gradient-${props.gradient}`]: typeof props.gradient === 'string' && props.gradient !== 'true',
+    [`bg-pattern-${props.pattern}`]: !!props.pattern,
   }
 })
 

@@ -126,7 +126,8 @@ onMounted(updateBodyClasses)
 </template>
 
 <style scoped>
-/* Adjust page wrapper margin when sidebar is narrow */
+/* Adjust page wrapper margin when sidebar is narrow / folded */
+:deep(.navbar-folded + .page-wrapper),
 :deep(.navbar-vertical-narrow + .page-wrapper) {
   margin-left: 5rem;
 }
@@ -137,6 +138,7 @@ onMounted(updateBodyClasses)
 }
 
 /* Handle right-side vertical sidebar if needed */
+:deep(.navbar-right.navbar-folded + .page-wrapper),
 :deep(.navbar-right.navbar-vertical-narrow + .page-wrapper) {
   margin-left: 0;
   margin-right: 5rem;

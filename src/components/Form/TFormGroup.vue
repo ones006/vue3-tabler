@@ -26,7 +26,7 @@ withDefaults(defineProps<Props>(), {
     <div :class="[horizontal ? 'col' : '']">
       <slot />
       <div v-if="error" class="invalid-feedback d-block">{{ error }}</div>
-      <div v-if="help" class="form-hint">
+      <div v-if="help" class="form-text">
         <slot name="help">{{ help }}</slot>
       </div>
     </div>

@@ -11,7 +11,7 @@ const colors = [
 ]
 
 const fonts = ['sans-serif', 'serif', 'monospace', 'comic']
-const bases = ['slate', 'gray', 'zinc', 'neutral', 'stone']
+const bases = ['slate', 'gray', 'zinc', 'neutral', 'stone', 'mist']
 const radiuses = ['0', '0.5', '1', '1.5', '2']
 
 onMounted(() => {
@@ -35,7 +35,7 @@ onMounted(() => {
         <div class="theme-settings-scroll">
           <div class="mb-4">
             <label class="form-label">Color mode</label>
-            <p class="form-hint">Choose the color mode for your app.</p>
+            <p class="form-text">Choose the color mode for your app.</p>
             <div class="form-selectgroup">
               <label class="form-selectgroup-item">
                 <input type="radio" v-model="themeStore.theme" value="light" class="form-selectgroup-input"
@@ -47,12 +47,17 @@ onMounted(() => {
                   @change="themeStore.setSetting('theme', 'dark')" />
                 <span class="form-selectgroup-label">Dark</span>
               </label>
+              <label class="form-selectgroup-item">
+                <input type="radio" v-model="themeStore.theme" value="auto" class="form-selectgroup-input"
+                  @change="themeStore.setSetting('theme', 'auto')" />
+                <span class="form-selectgroup-label">Auto</span>
+              </label>
             </div>
           </div>
 
           <div class="mb-4">
             <label class="form-label">Color scheme</label>
-            <p class="form-hint">The perfect color mode for your app.</p>
+            <p class="form-text">The perfect color mode for your app.</p>
             <div class="row g-2">
               <div v-for="color in colors" :key="color" class="col-auto">
                 <label class="form-colorinput">
@@ -66,7 +71,7 @@ onMounted(() => {
 
           <div class="mb-4">
             <label class="form-label">Font family</label>
-            <p class="form-hint">Choose the font family that fits your app.</p>
+            <p class="form-text">Choose the font family that fits your app.</p>
             <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
               <label v-for="font in fonts" :key="font" class="form-selectgroup-item flex-fill">
                 <input type="radio" v-model="themeStore['theme-font']" :value="font" class="form-selectgroup-input"
@@ -85,7 +90,7 @@ onMounted(() => {
 
           <div class="mb-4">
             <label class="form-label">Theme base</label>
-            <p class="form-hint">Choose the gray shade for your app.</p>
+            <p class="form-text">Choose the gray shade for your app.</p>
             <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
               <label v-for="base in bases" :key="base" class="form-selectgroup-item flex-fill">
                 <input type="radio" v-model="themeStore['theme-base']" :value="base" class="form-selectgroup-input"
@@ -104,7 +109,7 @@ onMounted(() => {
 
           <div class="mb-4">
             <label class="form-label">Corner Radius</label>
-            <p class="form-hint">Choose the border radius factor for your app.</p>
+            <p class="form-text">Choose the border radius factor for your app.</p>
             <div class="form-selectgroup">
               <label v-for="radius in radiuses" :key="radius" class="form-selectgroup-item">
                 <input type="radio" v-model="themeStore['theme-radius']" :value="radius" class="form-selectgroup-input"

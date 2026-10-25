@@ -6,7 +6,7 @@ interface Props {
   min?: number
   max?: number
   variant?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   indeterminate?: boolean
   label?: string
 }

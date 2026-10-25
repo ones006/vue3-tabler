@@ -9,13 +9,15 @@ interface Props {
   modelValue?: boolean
   autohide?: boolean
   delay?: number
+  urgent?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   modelValue: false,
   autohide: true,
-  delay: 5000
+  delay: 5000,
+  urgent: false
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])
@@ -61,7 +63,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" v-if="modelValue">
+  <div class="toast show" :role="urgent ? 'alert' : 'status'" :aria-live="urgent ? 'assertive' : 'polite'" aria-atomic="true" v-if="modelValue">
     <div class="toast-header">
       <span v-if="!$slots.icon" class="avatar avatar-xs me-2" :class="`bg-${variant}`"></span>
       <slot name="icon" />

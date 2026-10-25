@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 export interface ThemeSettings {
-  theme: 'light' | 'dark'
+  theme: 'light' | 'dark' | 'auto'
   'theme-primary': string
   'theme-font': string
   'theme-base': string

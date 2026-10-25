@@ -10,6 +10,8 @@ interface Props {
   id?: string
   name?: string
   format?: string
+  dateFormat?: string
+  weekNumbers?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,44 +19,72 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Select a date',
   disabled: false,
   readonly: false,
-  format: 'YYYY-MM-DD'
+  format: 'YYYY-MM-DD',
+  dateFormat: '',
+  weekNumbers: false
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
 
 const innerValue = ref(props.modelValue)
-const isLitepickerAvailable = ref(false)
-// Use a stable ID
+const isPickerAvailable = ref(false)
 const componentId = props.id || `datepicker-${Math.random().toString(36).substring(2, 11)}`
 let picker: any = null
 
 watch(() => props.modelValue, (val) => {
   innerValue.value = val
   if (picker) {
-    picker.setDate(val)
+    if (typeof picker.setSelectedDates === 'function') {
+      picker.setSelectedDates(val ? [val] : [])
+    } else if (typeof picker.setDate === 'function') {
+      picker.setDate(val)
+    }
   }
 })
 
 const initPicker = () => {
-  if ((window as any).Litepicker) {
-    isLitepickerAvailable.value = true
+  const el = document.getElementById(componentId)
+  if (!el) return
 
-    // We need to wait for the DOM to update 'type' change and ensures ID is present
+  const tabler = (window as any).tabler
+  const VanillaCalendarPro = (window as any).VanillaCalendarPro
+  const Litepicker = (window as any).Litepicker
+
+  // 1. Tabler native Datepicker (Tabler 1.6+)
+  if (tabler && tabler.Datepicker && VanillaCalendarPro) {
+    isPickerAvailable.value = true
+    try {
+      if (picker && typeof picker.dispose === 'function') {
+        picker.dispose()
+      }
+      picker = tabler.Datepicker.getOrCreateInstance(el, {
+        dateFormat: props.dateFormat || props.format || 'iso',
+        weekNumbers: props.weekNumbers
+      })
+      el.addEventListener('change', (e: any) => {
+        const val = e.target.value
+        innerValue.value = val
+        emit('update:modelValue', val)
+        emit('change', val)
+      })
+      return
+    } catch (e) {
+      console.warn('Tabler Datepicker initialization failed, falling back', e)
+    }
+  }
+
+  // 2. Legacy Litepicker (if loaded)
+  if (Litepicker) {
+    isPickerAvailable.value = true
     setTimeout(() => {
-      const el = document.getElementById(componentId)
-      if (!el) return
+      if (!document.getElementById(componentId)) return
+      if (picker && typeof picker.destroy === 'function') picker.destroy()
 
-      if (picker) picker.destroy()
-
-      picker = new (window as any).Litepicker({
+      picker = new Litepicker({
         element: el,
         format: props.format,
-        buttonText: {
-          previousMonth: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M15 6l-6 6l6 6" /></svg>`,
-          nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M9 6l6 6l-6 6" /></svg>`,
-        },
-        setup: (picker: any) => {
-          picker.on('selected', (date: any) => {
+        setup: (p: any) => {
+          p.on('selected', (date: any) => {
             const formatted = date.format(props.format)
             innerValue.value = formatted
             emit('update:modelValue', formatted)
@@ -62,24 +92,35 @@ const initPicker = () => {
           })
         }
       })
-    }, 200)
-  } else {
-    setTimeout(() => {
-      if ((window as any).Litepicker && !picker) {
-        initPicker()
-      }
-    }, 1000)
+    }, 100)
+    return
   }
+
+  // Otherwise, retry briefly if script is loading async
+  setTimeout(() => {
+    const hasTablerPicker = (window as any).tabler?.Datepicker && (window as any).VanillaCalendarPro
+    const hasLite = (window as any).Litepicker
+    if ((hasTablerPicker || hasLite) && !picker) {
+      initPicker()
+    }
+  }, 500)
 }
 
 onMounted(() => {
-  isLitepickerAvailable.value = !!(window as any).Litepicker
+  const tabler = (window as any).tabler
+  const VanillaCalendarPro = (window as any).VanillaCalendarPro
+  const Litepicker = (window as any).Litepicker
+  isPickerAvailable.value = !!((tabler?.Datepicker && VanillaCalendarPro) || Litepicker)
   initPicker()
 })
 
 onUnmounted(() => {
   if (picker) {
-    picker.destroy()
+    if (typeof picker.dispose === 'function') {
+      picker.dispose()
+    } else if (typeof picker.destroy === 'function') {
+      picker.destroy()
+    }
   }
 })
 
@@ -94,9 +135,18 @@ const onChange = (val: any) => {
 </script>
 
 <template>
-  <TInput :type="!isLitepickerAvailable ? 'date' : 'text'" :model-value="innerValue" :placeholder="placeholder"
-    :disabled="disabled" :readonly="readonly" :id="componentId" :name="name" @update:model-value="onInput"
-    @change="onChange">
+  <TInput
+    :type="isPickerAvailable ? 'text' : 'date'"
+    :model-value="innerValue"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :readonly="readonly"
+    :id="componentId"
+    :name="name"
+    data-bs-toggle="datepicker"
+    @update:model-value="onInput"
+    @change="onChange"
+  >
     <template #iconRight>
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

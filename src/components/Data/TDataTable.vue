@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-ignore
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
 
@@ -22,7 +23,7 @@ withDefaults(defineProps<Props>(), {
   borderless: false
 })
 
-const emit = defineEmits(['clickRow'])
+defineEmits(['clickRow'])
 </script>
 
 <template>
